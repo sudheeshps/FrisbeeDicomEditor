@@ -1,0 +1,124 @@
+﻿<hc:Window  xmlns:hc="https://handyorg.github.io/handycontrol" x:Class="FrisbeeDicomEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FrisbeeDicomEditor" 
+        xmlns:models="clr-namespace:FrisbeeDicomEditor.Models" 
+        xmlns:converters="clr-namespace:FrisbeeDicomEditor.Converters" xmlns:views="clr-namespace:FrisbeeDicomEditor.Views"
+            d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
+        mc:Ignorable="d"
+        hc:Theme.Skin="Dark"
+        WindowState="Maximized" WindowStyle="SingleBorderWindow" Title="{Binding WindowTitle}"
+        Icon="Resources/AppIcon.ico"
+            Closing="Window_Closing">
+    <Window.Resources>
+        <converters:Null2VisibilityConverter x:Key="NotNullToVisibilityConverter"/>
+        <converters:Null2VisibilityConverter Invert="True" x:Key="NullToVisibilityConverter"/>
+        <converters:Boolean2VisibilityConverter Invert="True" x:Key="InverseToBooleanVisibiltyConverter"/>
+        <converters:Boolean2VisibilityConverter x:Key="BooleanToVisibiltyConverter"/>
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding OpenDicomFileCommand}" Gesture="Ctrl+O"/>
+        <KeyBinding Command="{Binding SaveDicomFileCommand}" Gesture="Ctrl+S"/>
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" >
+            <MenuItem Header="File">
+                <MenuItem Command="{Binding OpenDicomFileCommand}" InputGestureText="Ctrl+O">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Background="Transparent">
+                            <Path VerticalAlignment="Center" Width="20" Height="20" Fill="LightBlue" Data="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z"/>
+                            <TextBlock VerticalAlignment="Center" Margin="5 5 0 0" Text="Open"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Command="{Binding SaveDicomFileCommand}" InputGestureText="Ctrl+S">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Background="Transparent">
+                            <Path VerticalAlignment="Center" Width="20" Height="20" Fill="LightBlue" Data="M4 19H10V21H4C2.89 21 2 20.1 2 19V5C2 3.9 2.89 3 4 3H16L20 7V9.12L18 11.12V7.83L15.17 5H4V19M14 10V6H5V10H14M20.42 12.3C20.31 12.19 20.18 12.13 20.04 12.13C19.9 12.13 19.76 12.19 19.65 12.3L18.65 13.3L20.7 15.35L21.7 14.35C21.92 14.14 21.92 13.79 21.7 13.58L20.42 12.3M12 19.94V22H14.06L20.12 15.93L18.07 13.88L12 19.94M14 15C14 13.34 12.66 12 11 12S8 13.34 8 15 9.34 18 11 18C11.04 18 11.08 18 11.13 18L14 15.13C14 15.09 14 15.05 14 15"/>
+                            <TextBlock VerticalAlignment="Center"  Margin="5 5 0 0" Text="SaveAs"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <StackPanel Visibility="{Binding ImageLoaded, Converter={StaticResource InverseToBooleanVisibiltyConverter}, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Style="{StaticResource ButtonPrimary}" Width="160" Height="30" Content="Open DICOM File"  FontSize="15" Command="{Binding OpenDicomFileCommand}"/>
+        </StackPanel>
+        <Grid Grid.Row="1" Visibility="{Binding ImageLoaded, Converter={StaticResource BooleanToVisibiltyConverter}, UpdateSourceTrigger=PropertyChanged}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <views:DicomTagView x:Name="header" Grid.Row="0" Grid.Column="0" Header="Header"
+                                    DicomAttributes="{Binding DicomItemsView}"
+                                    SearchTextChangedCommand="{Binding HeaderSearchTextChangedCommand}" 
+                                    DeleteDicomItemCommand="{Binding DeleteHeaderItemCommand}"
+                                    DeleteDicomItemCommandParam="{Binding DicomItems, UpdateSourceTrigger=PropertyChanged}"
+                                    VerticalContentAlignment="Stretch"
+                                    Grid.RowSpan="{Binding HeaderRowSpan, UpdateSourceTrigger=PropertyChanged}"/>
+                <GridSplitter Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Image Grid.Row="0" Visibility="{Binding DicomImage, Converter={StaticResource NotNullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" 
+                           Source="{Binding DicomImage, UpdateSourceTrigger=PropertyChanged}"/>
+                    <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <views:DicomTagView x:Name="image" Grid.Row="0" Header="Image attribute(s)"
+                                            DicomAttributes="{Binding ImageAttributesView}"
+                                            SearchTextChangedCommand="{Binding ImageAttributesSearchTextChangedCommand}"
+                                            DeleteDicomItemCommand="{Binding DeleteImageAttributesCommand}"
+                                            DeleteDicomItemCommandParam="{Binding ImageAttributes, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button Grid.Row="1" Style="{StaticResource ButtonPrimary}" Content="Replace Image" HorizontalAlignment="Center"  FontSize="12" Command="{Binding ReplaceImageCommand}"/>
+                    </Grid>
+                    <Image Grid.Row="0" Visibility="{Binding DicomImage, 
+                        Converter={StaticResource NullToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" 
+                           Source="Resources/NoImage.png"/>
+                </Grid>
+                <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding Sequences, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NotNullToVisibilityConverter}}"/>
+                <Grid Grid.Row="2" Grid.Column="0" Visibility="{Binding Sequences, Converter={StaticResource NotNullToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Row="0" Grid.Column="0" Height="30" Background="#326CF3" BorderBrush="#326CF3" BorderThickness="1">
+                        <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Sequence(s)" FontSize="12"/>
+                    </Border>
+                    <TreeView Grid.Row="1" Grid.Column="0" x:Name="sequenceTree" ItemsSource="{Binding Sequences, UpdateSourceTrigger=PropertyChanged}" SelectedItemChanged="TreeView_SelectedItemChanged" VerticalAlignment="Stretch"/>
+                    <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <views:DicomTagView Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Header="Sequence item(s)"
+                                        DicomAttributes="{Binding SelectedSequenceItems}"
+                                        SearchTextChangedCommand= "{Binding SequenceItemsSearchTextChangedCommand}"
+                                        DeleteDicomItemCommand="{Binding DeleteSequenceItemCommand}"
+                                        DeleteDicomItemCommandParam="{Binding SelectedSequenceItems, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</hc:Window>

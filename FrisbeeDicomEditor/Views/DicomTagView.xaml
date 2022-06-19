@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="FrisbeeDicomEditor.Views.DicomTagView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FrisbeeDicomEditor.Views" 
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="DicomTagViewControl">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="30" Background="#326CF3" BorderBrush="#326CF3" BorderThickness="1">
+            <TextBlock x:Name="header" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DicomTagView}}, Path=Header}" FontSize="12"/>
+        </Border>
+        <hc:SearchBar x:Name="searchBar"  Grid.Column="1" Margin="5 0 0 0" HorizontalAlignment="Right" Width="160" IsRealTime="True" 
+                      Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DicomTagView}}, Path=SearchTextChangedCommand}" 
+                      CommandParameter="{Binding Text,RelativeSource={RelativeSource Self}}"/>
+        <Button x:Name="deleteButton" Grid.Row="0" Grid.Column="2" Width="50" Padding="16,3" Margin="5" 
+                Style="{StaticResource ButtonDanger.Small}" hc:IconElement.Geometry="{StaticResource DeleteGeometry}"
+                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DicomTagView}}, Path=DeleteDicomItemCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DicomTagView}}, Path=DeleteDicomItemCommandParam}"/>
+        <DataGrid x:Name="dataGrid" Grid.Row="1" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="3" 
+                  ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DicomTagView}}, Path=DicomAttributes}" 
+                  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Tag" IsReadOnly="True" Binding="{Binding DicomTag}"/>
+                <DataGridTextColumn Header="VR" IsReadOnly="True" Binding="{Binding DicomVR}"/>
+                <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Width="400" MaxWidth="600">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Left"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Width="400" MaxWidth="600">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Left"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
