@@ -62,5 +62,13 @@ namespace FrisbeeDicomEditor.Views
             get => GetValue(DeleteDicomItemCommandParamProperty);
             set => SetValue(DeleteDicomItemCommandParamProperty, value);
         }
+        public static readonly DependencyProperty ValueColumnWidthProperty =
+            DependencyProperty.Register("ValueColumnWidth", typeof(int), typeof(DicomTagView),
+                new PropertyMetadata(default(int)));
+        public int ValueColumnWidth
+        {
+            get => (int)GetValue(ValueColumnWidthProperty);
+            set => SetValue(ValueColumnWidthProperty, value);
+        }
     }
 }

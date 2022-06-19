@@ -20,7 +20,8 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="30" Background="#326CF3" BorderBrush="#326CF3" BorderThickness="1">
-            <TextBlock x:Name="header" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DicomTagView}}, Path=Header}" FontSize="12"/>
+            <TextBlock x:Name="header" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DicomTagView}}, Path=Header}" FontSize="12"/>
         </Border>
         <hc:SearchBar x:Name="searchBar"  Grid.Column="1" Margin="5 0 0 0" HorizontalAlignment="Right" Width="160" IsRealTime="True" 
                       Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DicomTagView}}, Path=SearchTextChangedCommand}" 
@@ -36,7 +37,8 @@
                 <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="Tag" IsReadOnly="True" Binding="{Binding DicomTag}"/>
                 <DataGridTextColumn Header="VR" IsReadOnly="True" Binding="{Binding DicomVR}"/>
-                <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Width="400" MaxWidth="600">
+                <DataGridTextColumn Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" 
+                                    Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DicomTagView}}, Path=ValueColumnWidth}" MaxWidth="600">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
