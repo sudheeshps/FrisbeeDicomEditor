@@ -184,10 +184,10 @@
     <Resource Include="Resources\NoImage.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="AppIcon.ico" />
+    <Resource Include="Resources\AppIcon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\AppIcon.ico" />
+    <Resource Include="AppIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\fo-dicom.Desktop.4.0.8\build\net45\fo-dicom.Desktop.targets" Condition="Exists('..\packages\fo-dicom.Desktop.4.0.8\build\net45\fo-dicom.Desktop.targets')" />
