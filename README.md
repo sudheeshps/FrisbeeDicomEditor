@@ -12,4 +12,4 @@ Suggestions from community are welcome. Also test with different kind of DICOM i
 
 ![](Images/screen.png "DICOM editor screen")
 
-``Note: use x64 build configuration to build``
+``Note: Tested only with 64 bit Windows. Build with x64 build configuration``
