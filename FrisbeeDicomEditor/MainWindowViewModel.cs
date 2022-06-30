@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace FrisbeeDicomEditor
 {
-    class MainWindowViewModel : ObservableObject
+    public class MainWindowViewModel : ObservableObject
     {
         private const string DicomEditorName = "Frisbee DICOM Editor";
         private string _windowTitle = DicomEditorName;

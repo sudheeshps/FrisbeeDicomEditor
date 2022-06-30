@@ -13,34 +13,34 @@ using DicomItem = Dicom.DicomItem;
 
 namespace FrisbeeDicomEditor.Services
 {
-    internal class DicomFileStateEventArgs : EventArgs
+    public class DicomFileStateEventArgs : EventArgs
     {
         public string FileName { get; set; }
         public Exception Exception { get; set; }
     }
-    internal class DicomDatasetLoadStartedEventArgs : EventArgs
+    public class DicomDatasetLoadStartedEventArgs : EventArgs
     {
         public DicomDataset DicomDataset { get; set; }
     }
-    internal enum DicomItemType
+    public enum DicomItemType
     {
         Normal,
         ImageAttribute,
         SequenceItem,
         PixelData
     }
-    internal class DicomItemReadEventArgs : EventArgs
+    public class DicomItemReadEventArgs : EventArgs
     {
         public DicomDataset DicomDataset { get; set; }
         public DicomItem DicomItem { get; set; }
         public DicomItemType DicomItemType { get; set; }
     }
-    internal class DicomDatasetLoadCompletedArgs : EventArgs
+    public class DicomDatasetLoadCompletedArgs : EventArgs
     {
         public DicomDataset DicomDataset { get; set; }
     }
 
-    internal class DicomDataService : ObservableObject
+    public class DicomDataService : ObservableObject
     {
         private DicomDataset _dataset;
 
