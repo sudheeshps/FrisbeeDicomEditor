@@ -10,6 +10,6 @@ The following features are in wish list:
 
 Suggestions from community are welcome. Also test with different kind of DICOM images is appreciated.
 
-![](Images/screen.png "DICOM editor screen")
+![](Images/screenshort.png "DICOM editor screen")
 
 ``Note: Tested only with 64 bit Windows. Build with x64 build configuration``
