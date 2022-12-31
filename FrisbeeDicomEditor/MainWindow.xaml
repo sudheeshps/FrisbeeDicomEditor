@@ -7,7 +7,7 @@
             xmlns:local="clr-namespace:FrisbeeDicomEditor"
             xmlns:models="clr-namespace:FrisbeeDicomEditor.Models"
             xmlns:converters="clr-namespace:FrisbeeDicomEditor.Converters" 
-            xmlns:views="clr-namespace:FrisbeeDicomEditor.Views"
+            xmlns:views="clr-namespace:FrisbeeDicomEditor.Views" d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
             mc:Ignorable="d"
             hc:Theme.Skin="Dark"
             WindowState="Maximized" WindowStyle="SingleBorderWindow" Title="{Binding WindowTitle}"
@@ -18,6 +18,27 @@
         <converters:Null2VisibilityConverter Invert="True" x:Key="NullToVisibilityConverter"/>
         <converters:Boolean2VisibilityConverter Invert="True" x:Key="InverseToBooleanVisibiltyConverter"/>
         <converters:Boolean2VisibilityConverter x:Key="BooleanToVisibiltyConverter"/>
+        <Style x:Key="RoundButton" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse Stroke="#326CF3"
+                         StrokeThickness="2">
+                                <Ellipse.Fill>
+                                    <SolidColorBrush Color="WhiteSmoke"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding OpenDicomFileCommand}" Gesture="Ctrl+O"/>
@@ -29,27 +50,53 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" >
-            <MenuItem Header="File">
-                <MenuItem Command="{Binding OpenDicomFileCommand}" InputGestureText="Ctrl+O">
-                    <MenuItem.Header>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Background="Transparent">
-                            <Path VerticalAlignment="Center" Width="20" Height="20" Fill="LightBlue" Data="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z"/>
-                            <TextBlock VerticalAlignment="Center" Margin="5 5 0 0" Text="Open"/>
-                        </StackPanel>
-                    </MenuItem.Header>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0" Background="Transparent" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Menu HorizontalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="3">
+                <MenuItem Header="File">
+                    <MenuItem Command="{Binding OpenDicomFileCommand}" InputGestureText="Ctrl+O">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Background="Transparent">
+                                <Path VerticalAlignment="Center" Width="20" Height="20" Fill="LightBlue" Data="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z"/>
+                                <TextBlock VerticalAlignment="Center" Margin="5 5 0 0" Text="Open"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding SaveDicomFileCommand}" InputGestureText="Ctrl+S">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Background="Transparent">
+                                <Path VerticalAlignment="Center" Width="20" Height="20" Fill="LightBlue" Data="M4 19H10V21H4C2.89 21 2 20.1 2 19V5C2 3.9 2.89 3 4 3H16L20 7V9.12L18 11.12V7.83L15.17 5H4V19M14 10V6H5V10H14M20.42 12.3C20.31 12.19 20.18 12.13 20.04 12.13C19.9 12.13 19.76 12.19 19.65 12.3L18.65 13.3L20.7 15.35L21.7 14.35C21.92 14.14 21.92 13.79 21.7 13.58L20.42 12.3M12 19.94V22H14.06L20.12 15.93L18.07 13.88L12 19.94M14 15C14 13.34 12.66 12 11 12S8 13.34 8 15 9.34 18 11 18C11.04 18 11.08 18 11.13 18L14 15.13C14 15.09 14 15.05 14 15"/>
+                                <TextBlock VerticalAlignment="Center"  Margin="5 5 0 0" Text="SaveAs"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
                 </MenuItem>
-                <MenuItem Command="{Binding SaveDicomFileCommand}" InputGestureText="Ctrl+S">
-                    <MenuItem.Header>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Background="Transparent">
-                            <Path VerticalAlignment="Center" Width="20" Height="20" Fill="LightBlue" Data="M4 19H10V21H4C2.89 21 2 20.1 2 19V5C2 3.9 2.89 3 4 3H16L20 7V9.12L18 11.12V7.83L15.17 5H4V19M14 10V6H5V10H14M20.42 12.3C20.31 12.19 20.18 12.13 20.04 12.13C19.9 12.13 19.76 12.19 19.65 12.3L18.65 13.3L20.7 15.35L21.7 14.35C21.92 14.14 21.92 13.79 21.7 13.58L20.42 12.3M12 19.94V22H14.06L20.12 15.93L18.07 13.88L12 19.94M14 15C14 13.34 12.66 12 11 12S8 13.34 8 15 9.34 18 11 18C11.04 18 11.08 18 11.13 18L14 15.13C14 15.09 14 15.05 14 15"/>
-                            <TextBlock VerticalAlignment="Center"  Margin="5 5 0 0" Text="SaveAs"/>
-                        </StackPanel>
-                    </MenuItem.Header>
-                </MenuItem>
-            </MenuItem>
-        </Menu>
-        <StackPanel Visibility="{Binding ImageLoaded, Converter={StaticResource InverseToBooleanVisibiltyConverter}, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            </Menu>
+            <Button Grid.Column="1" Margin="3" Style="{StaticResource RoundButton}" 
+                    IsEnabled="{Binding ImageLoaded, UpdateSourceTrigger=PropertyChanged}"
+                    Command="{Binding BackCommand}">
+                <Button.Content>
+                    <Path Width="30" Height="30" Stretch="Fill" Fill="#326CF3" Data="M2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12M18,11H10L13.5,7.5L12.08,6.08L6.16,12L12.08,17.92L13.5,16.5L10,13H18V11Z"/>
+                </Button.Content>
+            </Button>
+            <Button Grid.Column="2" Margin="3" Style="{StaticResource RoundButton}" 
+                    IsEnabled="{Binding ImageLoaded, UpdateSourceTrigger=PropertyChanged}"
+                    Command="{Binding ForwardCommand}">
+                <Button.Content>
+                    <Path Width="30" Height="30" Stretch="Fill" Fill="#326CF3" Data="M22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12M6,13H14L10.5,16.5L11.92,17.92L17.84,12L11.92,6.08L10.5,7.5L14,11H6V13Z"/>
+                </Button.Content>
+            </Button>
+        </Grid>
+       
+        <StackPanel Visibility="{Binding ImageLoaded, Converter={StaticResource InverseToBooleanVisibiltyConverter}, UpdateSourceTrigger=PropertyChanged}" 
+                    Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button Style="{StaticResource ButtonPrimary}" Width="160" Height="30" Content="Open DICOM File"  FontSize="15" Command="{Binding OpenDicomFileCommand}"/>
         </StackPanel>
         <Grid Grid.Row="1" Visibility="{Binding ImageLoaded, Converter={StaticResource BooleanToVisibiltyConverter}, UpdateSourceTrigger=PropertyChanged}">

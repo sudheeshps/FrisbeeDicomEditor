@@ -116,6 +116,42 @@ namespace FrisbeeDicomEditor
                 return _openDicomFileCommand;
             }
         }
+        private RelayCommand _backwardCommand;
+        public ICommand BackCommand
+        {
+            get
+            {
+                if (_backwardCommand == null)
+                {
+                    _backwardCommand = new RelayCommand(LoadPrevious);
+                }
+                return _backwardCommand;
+            }
+        }
+
+        private async void LoadPrevious()
+        {
+            await _dicomDataService.LoadPreviousFile();
+        }
+
+        private RelayCommand _forwardCommand;
+        public ICommand ForwardCommand
+        {
+            get
+            {
+                if (_forwardCommand == null)
+                {
+                    _forwardCommand = new RelayCommand(LoadNext);
+                }
+                return _forwardCommand;
+            }
+        }
+
+        private async void LoadNext()
+        {
+            await _dicomDataService.LoadNextFile();
+        }
+
         private RelayCommand _saveDicomFileCommand;
         public ICommand SaveDicomFileCommand
         {
@@ -628,6 +664,7 @@ namespace FrisbeeDicomEditor
                 dicomItems.Remove(item);
             }
         }
+
         #endregion
     }
 }

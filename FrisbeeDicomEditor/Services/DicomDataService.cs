@@ -10,6 +10,8 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using DicomItem = Dicom.DicomItem;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FrisbeeDicomEditor.Services
 {
@@ -43,6 +45,9 @@ namespace FrisbeeDicomEditor.Services
     public class DicomDataService : ObservableObject
     {
         private DicomDataset _dataset;
+        private List<string> _files;
+        private string _currentDir;
+        private int _fileIndex = 0;
 
         public EventHandler<DicomFileStateEventArgs> FileOpenSuccess;
         public EventHandler<DicomFileStateEventArgs> FileOpenFailed;
@@ -77,6 +82,7 @@ namespace FrisbeeDicomEditor.Services
                     _dataset = dicomFile.Dataset.Clone();
                     LoadDicomDataset();
                     FileOpenSuccess?.Invoke(this, new DicomFileStateEventArgs() { FileName = fileName });
+                    LoadFilesInDirectory(fileName);
                     return true;
                 }
             }
@@ -85,6 +91,32 @@ namespace FrisbeeDicomEditor.Services
                 FileOpenFailed?.Invoke(this, new DicomFileStateEventArgs() { FileName = fileName, Exception = ex });
                 return false;
             }
+        }
+        public async Task<bool> LoadNextFile()
+        {
+            if (_files.Count == 1)
+            {
+                return true;
+            }
+
+            if (_fileIndex == _files.Count - 1)
+            {
+                _fileIndex = 0;
+            }
+            return await LoadDicomFileAsync(_files[_fileIndex++]);
+        }
+        public async Task<bool> LoadPreviousFile()
+        {
+            if (_files.Count == 1)
+            {
+                return true;
+            }
+
+            if (_fileIndex == 0)
+            {
+                _fileIndex = _files.Count - 1;
+            }
+            return await LoadDicomFileAsync(_files[--_fileIndex]);
         }
         public async Task<bool> SaveDicomFileAsync(string fileName)
         {
@@ -119,7 +151,16 @@ namespace FrisbeeDicomEditor.Services
                 ReplaceImageFailed?.Invoke(this, new DicomFileStateEventArgs() { Exception = ex });
             }
         }
-
+        private void LoadFilesInDirectory(string fileName)
+        {
+            var dir = Path.GetDirectoryName(fileName);
+            if (_currentDir != dir)
+            {
+                _files = Directory.GetFiles(dir).ToList();
+                _fileIndex = 0;
+                _currentDir = dir;
+            }
+        }
         private void AddPixelData(SelectedImageInfo selectedImageInfo, int rows, int columns, MemoryByteBuffer buffer)
         {
             var pixelData = DicomPixelData.Create(_dataset, true);
