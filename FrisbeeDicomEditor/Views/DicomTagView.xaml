@@ -46,7 +46,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Description" Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Width="400" MaxWidth="600">
+                <DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding Description}" Width="400" MaxWidth="600">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
